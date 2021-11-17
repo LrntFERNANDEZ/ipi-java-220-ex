@@ -2,6 +2,8 @@ package com.ipiecoles.java.java220;
 
 import org.joda.time.LocalDate;
 
+import java.util.Objects;
+
 /**
  * Created by pjvilloud on 21/09/17.
  */
@@ -31,7 +33,17 @@ public class Employe {
         return Entreprise.NB_CONGES_BASE;
     }
 
-    public void augmenterSalaire(Double pourcentage){
+    /**
+     * Méthode permettant d'augmenter le salaire de l'employé
+     *
+     * Le salaire devra être renseigné
+     * @param pourcentage pourcentage d'augmentation du salaire
+     * @throws Exception si le pourcentage est incorrect
+     */
+    public void augmenterSalaire(Double pourcentage) throws Exception {
+        if(pourcentage == null || pourcentage <= 0 || pourcentage > 1){
+            throw new Exception("Le pourcentage ne peut être null, égal à 0 ou supérieur à 1");
+        }
         this.salaire = this.salaire * (1 + pourcentage);
     }
 
@@ -67,7 +79,13 @@ public class Employe {
         return dateEmbauche;
     }
 
-    public void setDateEmbauche(LocalDate dateEmbauche) {
+    public void setDateEmbauche(LocalDate dateEmbauche) throws Exception {
+        if(dateEmbauche == null){
+            throw new Exception("La date d'embauche ne peut être nulle");
+        }
+        if(dateEmbauche.isAfter(LocalDate.now())){
+            throw new Exception("La date d'embauche ne peut être postérieure à la date actuelle");
+        }
         this.dateEmbauche = dateEmbauche;
     }
 
@@ -77,5 +95,34 @@ public class Employe {
 
     public void setSalaire(Double salaire) {
         this.salaire = salaire;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Employe employe = (Employe) o;
+        return Objects.equals(this.nom, employe.nom) &&
+                Objects.equals(prenom, employe.prenom) &&
+                Objects.equals(matricule, employe.matricule) &&
+                Objects.equals(dateEmbauche, employe.dateEmbauche) &&
+                Objects.equals(salaire, employe.salaire);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(nom, prenom, matricule, dateEmbauche, salaire);
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Employe{");
+        sb.append("nom='").append(nom).append('\'');
+        sb.append(", prenom='").append(prenom).append('\'');
+        sb.append(", matricule='").append(matricule).append('\'');
+        sb.append(", dateEmbauche=").append(dateEmbauche);
+        sb.append(", salaire=").append(salaire);
+        sb.append('}');
+        return sb.toString();
     }
 }
